@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Startseite</title>
+    <title>Login</title>
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" type="text/css" href="css/styling.css">
     <script src="clientscript.js"></script>
@@ -11,19 +11,19 @@
 <body>
 <div id="loginbox">
     <img src="media/icon.png" id="avatar" alt="Logo Platzhalter">
-    <form action="javascript:register()">
+    <form action="javascript:getUsers()">
         <label for="uname">Username:</label><br>
         <input type="text" id="uname" name="uname" value=""><br>
         <label for="password">Passwort:</label><br>
         <input type="password" id="password"  name="password" value=""><br><br>
-        <input type="submit" name="submit" value="Registrieren">
+        <input type="submit" name="submit" value="Login">
     </form>
-    <a href="loginPage.html" id="toLogin">Login-Seite</a>
+    <a href="index.html" id="toLogin">Zur Registrierung</a>
     <p id="serverMessage"></p>
-    <p id="anmerkung">Klicken Sie auf den Button, um die Registrierung abzuschließen.</p><br/>
-<footer>
-    &copy; 2021 Jonas Kopp a.k.a. Moripho
-</footer>
+    <p id="anmerkung">Klicken Sie auf den Button, um sich einzuloggen.</p><br/>
+    <footer>
+        &copy; 2021 Jonas Kopp a.k.a. Moripho
+    </footer>
 </div>
 </body>
 </html>
