@@ -10,21 +10,23 @@ body {
 }
 
 a {
-    display: inline-block;
+    display: block;
     text-decoration: none;
     font-size: 18px;
-    color: purple;
-    margin-left: 20px;
+    color: white;
     text-align: center;
 }
 
-#toStart {
-    margin-left: 45px;
+#headingLandingpage {
+    text-align: center;
+    font-size: 48px;
+    color: white;
+    margin-top: 350px;
 }
 
 #loginbox {
     width: 320px;
-    height: 450px;
+    height: 420px;
     background: rgba(0, 0, 0, 0.5);
     color: #fff;
     top: 50%;
@@ -80,32 +82,11 @@ input[type="submit"] {
 
 input[type="submit"]:hover {
     cursor: pointer;
-    background: #fff9cb;
-    color: #000;
-}
-
-#anmerkung {
-    text-align: center;
-    display: inline-block;
+    background: #3d642d;
     color: white;
-    font-size: 16px;
 }
 
 #serverMessage, #loginMessage {
     text-align: center;
     font-size: 20px;
-}
-
-/*---------------------------------- unterseiteEins + unterSeiteZwei-------------------------------------*/
-
-#loginboxUnterseiteEins, #loginboxUnterseiteZwei {
-    width: 320px;
-    background: rgba(0, 0, 0, 0.5);
-    color: #fff;
-    top: 50%;
-    left: 50%;
-    position: absolute;
-    transform: translate(-50%, -50%);
-    box-sizing: border-box;
-    padding: 70px 30px;
 }
