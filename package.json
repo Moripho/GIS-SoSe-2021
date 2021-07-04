@@ -1,0 +1,27 @@
+{
+  "name": "gissomses2021",
+  "version": "1.0.0",
+  "description": "Repository für die Modulprüfung in GIS im SoSe 2021",
+  "main": "index.js",
+  "dependencies": {
+    "@types/mongodb": "^3.6.19",
+    "mongodb": "^3.6.9"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.1"
+  },
+  "scripts": {
+    "start": "node server/serverscript.js",
+    "serve": "live-server --port=3000 --open=\"./client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Moripho/GIS-SoSe-2021.git"
+  },
+  "author": "Jonas Kopp",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Moripho/GIS-SoSe-2021/issues"
+  },
+  "homepage": "https://github.com/Moripho/GIS-SoSe-2021#readme"
+}
