@@ -1,4 +1,5 @@
-*{
+/*--Generelles Styling--------------------------------------------*/
+* {
     box-sizing: border-box;
 }
 
@@ -15,70 +16,7 @@ body {
     box-sizing: border-box;
 }
 
-a {
-    display: block;
-    text-decoration: none;
-    font-size: 18px;
-    color: white;
-    text-align: center;
-}
-
-h1 {
-    text-align: center;
-    font-size: 48px;
-    color: white;
-    margin-top: 6vh;
-}
-
-footer {
-    color: white;
-    text-align: center;
-}
-input {
-    width: 100%;
-    height: 40px;
-    border: none;
-    margin-bottom: 20px;
-    outline: none;
-}
-input:not(input[type="submit"]) {
-    border-bottom: 1px solid #fff;
-    background: transparent;
-    color: #fff;
-    font-size: 16px;
-}
-
-input[type="number"] {
-    -moz-appearance: textfield;
-}
-
-input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-input[type="submit"] {
-    background: #fff;
-    color: #000;
-    font-size: 18px;
-    border-radius: 40px;
-}
-
-input[type="submit"]:hover {
-    cursor: pointer;
-    background: #3d642d;
-    color: white;
-}
-
-.recipeContainer {
-    background: rgba(0, 0, 0, 0.5);
-    color: #fff;
-    position: fixed;
-    margin-top: 80px;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
+/*--Navigation Styling --------------------------------------------*/
 .navBar {
     display: flex;
     justify-content: space-between;
@@ -88,12 +26,7 @@ input[type="submit"]:hover {
     height: 80px;
 }
 
-.brandName {
-    font-size: 24px;
-    margin: 8px;
-}
-
-.navBarLinks ul{
+.navBarLinks ul {
     margin: 0;
     padding: 0;
     display: flex;
@@ -133,8 +66,62 @@ input[type="submit"]:hover {
     border-radius: 10px;
 }
 
-#headingLandingpage {
-    margin-top: 15vh;
+/*--Styling Login-/Register-Page --------------------------------------------*/
+a {
+    display: block;
+    text-decoration: none;
+    font-size: 18px;
+    color: white;
+    text-align: center;
+}
+
+h1 {
+    text-align: center;
+    font-size: 48px;
+    color: white;
+    margin-top: 6vh;
+}
+
+footer {
+    color: white;
+    text-align: center;
+}
+
+input {
+    width: 100%;
+    height: 40px;
+    border: none;
+    margin-bottom: 20px;
+    outline: none;
+}
+
+input:not(input[type="submit"]) {
+    border-bottom: 1px solid #fff;
+    background: transparent;
+    color: #fff;
+    font-size: 16px;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="submit"] {
+    background: #fff;
+    color: #000;
+    font-size: 18px;
+    border-radius: 40px;
+}
+
+input[type="submit"]:hover {
+    cursor: pointer;
+    background: #3d642d;
+    color: white;
 }
 
 #loginbox {
@@ -164,6 +151,55 @@ input[type="submit"]:hover {
     font-size: 20px;
 }
 
+/*--Meine-Rezepte-Seite--------------------------------------------*/
+
+textarea {
+    background: transparent;
+    color: white;
+    resize: none;
+    width: 100%;
+}
+
+.creationPageHeading {
+    margin: 0 0 22px 0;
+    font-size: 32px;
+}
+
+
+
+.recipeContainer {
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    position: fixed;
+    margin-top: 80px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.brandName {
+    font-size: 24px;
+    margin: 8px;
+}
+
+#headingLandingpage {
+    margin-top: 15vh;
+}
+
+#recipeCreation {
+    width: 415px;
+    height: 1100px;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+    padding: 30px 30px;
+}
+
+/*--Media-Queries für responsives Design--------------------------------------------*/
+
 @media (max-width: 820px ) {
     .toggleButton {
         display: flex;
@@ -188,7 +224,7 @@ input[type="submit"]:hover {
         text-align: center;
     }
 
-    .navBarLinks li a{
+    .navBarLinks li a {
         padding: 8px 16px;
     }
 

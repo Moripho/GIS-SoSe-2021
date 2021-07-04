@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rezept erstellen</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" href="css/styling.css">
+    <script src="application.js"></script>
+</head>
+<body>
+<header>
+    <nav class="navBar">
+        <div class="brandName">Moriphos Rezepteküche</div>
+        <a href="#" class="toggleButton">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </a>
+        <div class="navBarLinks">
+            <ul>
+                <li>
+                    <a href="allRecipes.html">Alle Rezepte</a>
+                </li>
+                <li>
+                    <a href="myFavorites.html">Meine Favoriten</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+    <div id="recipeCreation">
+        <h1 class="creationPageHeading">Rezept erstellen</h1><br>
+        <form action="#">
+            <label for="recipeTitle">Rezeptname:</label><br>
+            <input type="text" id="recipeTitle" name="recipeTitle" value=""><br>
+            <fieldset>
+                <legend>Zutatenliste</legend>
+                <input type="text" id="recipeIngredientOne" name="recipeIngredientOne" value=""><br>
+                <input type="text" id="recipeIngredientTwo" name="recipeIngredientTwo" value=""><br>
+                <input type="text" id="recipeIngredientThree" name="recipeIngredientThree" value=""><br>
+                <input type="text" id="recipeIngredientFour" name="recipeIngredientFour" value=""><br>
+                <input type="text" id="recipeIngredientFive" name="recipeIngredientFive" value=""><br>
+                <input type="text" id="recipeIngredientSix" name="recipeIngredientSix" value=""><br>
+                <input type="text" id="recipeIngredientSeven" name="recipeIngredientSeven" value=""><br>
+                <input type="text" id="recipeIngredientEight" name="recipeIngredientEight" value=""><br>
+                <input type="text" id="recipeIngredientNine" name="recipeIngredientNine" value=""><br>
+                <input type="text" id="recipeIngredientTen" name="recipeIngredientTen" value=""><br>
+            </fieldset><br>
+            <label for="recipePreparation">Zubereitung:</label><br>
+            <textarea id="recipePreparation" name="recipePreparation" cols="50" rows="8"></textarea><br><br>
+            <input type="submit" name="submit" value="Posten"><br>
+    </form>
+    </div>
+    <div class="publishedRecipes">
+        <h1 class="creationPageHeading">Veröffentlichte Rezepte</h1><br>
+        <p>asdjkasjd  asjdlka  jkdljlkdsjf  kljsdfkj skljfklsdjaf lkjsdfjk </p>
+    </div>
+
+</body>
+</html>
