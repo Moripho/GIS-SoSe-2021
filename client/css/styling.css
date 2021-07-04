@@ -16,7 +16,13 @@ body {
     box-sizing: border-box;
 }
 
-/*--Navigation Styling --------------------------------------------*/
+/*--Navigation Styling für alle Seiten außer Login-/Register-Page-------*/
+
+.brandName {
+    font-size: 24px;
+    margin: 8px;
+}
+
 .navBar {
     display: flex;
     justify-content: space-between;
@@ -124,6 +130,10 @@ input[type="submit"]:hover {
     color: white;
 }
 
+#headingLandingpage {
+    margin-top: 15vh;
+}
+
 #loginbox {
     width: 320px;
     height: 420px;
@@ -151,21 +161,7 @@ input[type="submit"]:hover {
     font-size: 20px;
 }
 
-/*--Meine-Rezepte-Seite--------------------------------------------*/
-
-textarea {
-    background: transparent;
-    color: white;
-    resize: none;
-    width: 100%;
-}
-
-.creationPageHeading {
-    margin: 0 0 22px 0;
-    font-size: 32px;
-}
-
-
+/*--Alle-Rezepte-Seite --------------------------------------------*/
 
 .recipeContainer {
     background: rgba(0, 0, 0, 0.5);
@@ -176,16 +172,16 @@ textarea {
     transform: translate(-50%, -50%);
 }
 
-.brandName {
-    font-size: 24px;
-    margin: 8px;
+/*--Meine-Rezepte-Seite--------------------------------------------*/
+
+textarea {
+    background: transparent;
+    color: white;
+    resize: none;
+    width: 100%;
 }
 
-#headingLandingpage {
-    margin-top: 15vh;
-}
-
-#recipeCreation {
+#recipeCreationContainer {
     width: 415px;
     height: 1100px;
     background: rgba(0, 0, 0, 0.5);
@@ -196,6 +192,19 @@ textarea {
     transform: translate(-50%, -50%);
     box-sizing: border-box;
     padding: 30px 30px;
+}
+
+#publishedRecipes {
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    position: fixed;
+    top: 100%;
+    left: 100%;
+}
+
+.creationPageHeading {
+    margin: 0 0 22px 0;
+    font-size: 32px;
 }
 
 /*--Media-Queries für responsives Design--------------------------------------------*/
