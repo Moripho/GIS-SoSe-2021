@@ -14,11 +14,11 @@ var serverModulprüfung;
     const databaseURL = isLocal ? "mongodb://localhost:27017" : "mongodb+srv://MoriphoADMIN:<9u44YeFMCJuX6ysf>@gissose2021.ddtxe.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
     startServer(port);
     function startServer(_port) {
-        let server = Http.createServer();
+        let server = Http.createServer(); // Erstellen eines HTTP-Servers
         console.log("Server starting on port " + _port); // Konsolenausgabe, die Port des Servers ausgibt
-        server.listen(_port); // listen-Funktion wird aufgerufen und triggert Eventlistener
-        server.addListener("request", handleRequest); // Um Anfragen (requests) von Nutzern auf einem Server verarbeiten zu können, wird dieser Eventlistener verwendet. Der Listener ruft für jede eingehende Nutzeranfrage bzw. request die handleRequest-Funktion auf
-        server.addListener("listening", () => console.log("Listening")); // Eventlistener: Hört Server zu und befindet sich im status "listening", so wird dies auf der Konsole ausgegeben
+        server.listen(_port); // Portöffnung, durch listen-Funktion mit Referenz zu oben definiertem Port
+        server.addListener("request", handleRequest); // Um Anfragen (requests) von Nutzern auf einem Server verarbeiten zu können, wird dieser Listener verwendet. Der Listener ruft für jede eingehende Nutzeranfrage bzw. request die handleRequest-Funktion auf
+        server.addListener("listening", () => console.log("Listening")); // Listener, der auf bestimmte Events (z. B. Klickevent) hört
     }
     async function connectToUserDb(_url) {
         let options = { useNewUrlParser: true, useUnifiedTopology: true };
@@ -41,9 +41,9 @@ var serverModulprüfung;
         // ServerResponse ist ein Objekt, welches Infos für die Serverantowrt sammelt. Die Info wird unterteilt in Header (Infos zur eigentlichen Nachricht) und Body (die Nachricht selbst)
         _response.setHeader("content-type", "text/html; charset=utf-8"); // über setHeader-Funktion wird Header-Information integriert. Header gibt an, dass die Serverantwort ein mit utf-8 kodierter Text ist.
         _response.setHeader("Access-Control-Allow-Origin", "*"); // jeder darf Nachricht öffnen, Asterisk "*" = alles
-        if (_request.url) {
-            console.log("Received parameters");
-            const url = new URLSearchParams(_request.url.replace("/?", ""));
+        if (_request.url) { // if-Bedingung für den Fall einer eingehenden Request
+            console.log("Received parameters"); // Bestätigung, dass Request stattgefunden hast
+            const url = new URLSearchParams(_request.url.replace("/?", "")); // URL in Zeichenkette umwandeln, um daraus Requesttyp zu bekommen
             let response;
             switch (url.get("requestType")) {
                 case "register":
@@ -52,7 +52,7 @@ var serverModulprüfung;
                 case "login":
                     response = await login(url);
                     break;
-                case "getRecipe":
+                case "getRecipes":
                     response = await getRecipes();
                     break;
                 default:

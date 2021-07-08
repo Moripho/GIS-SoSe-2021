@@ -1,6 +1,6 @@
 "use strict";
 const isLocal = true; // Bei Upload in Cloud muss Wert als false gesetzt werden!
-const url = isLocal ? "http://localhost:8100" : "https://gissomses2021.herokuapp.com";
+const url = isLocal ? "http://localhost:8100" : "https://gissomses2021.herokuapp.com"; // URL des zu kontaktierenden Servers definieren
 function checkLogin() {
     if (!sessionStorage.getItem("username")) {
         window.location.href = "index.html";
@@ -57,14 +57,16 @@ function getRecipes() {
         response.forEach((recipe) => {
             const newRecipeElement = document.createElement("recipeContainer");
             newRecipeElement.innerHTML =
-                `<h2 class="recipe-title">${recipe.title}</h2>
-                 <h3 class="recipe-username">${recipe.username}</h3>
-                 <h3 class="recipe-ingredients-heading">Ingredients</h3>
-                 <ul class="recipe-ingredients">
-                    ${recipe.ingredients.map((ingredient) => (`<li class="recipe-ingredient">${ingredient}</li>`))}
-                 </ul>
-                 <h3 class="recipe-preparation-heading">Preparation</h3>
-                 <p class="recipe-preparation">${recipe.preparation}</p>`;
+                `<div class="recipe">
+                   <h2 class="recipeTitle">${recipe.title}</h2>
+                   <h3 class="recipeUsername">${recipe.username}</h3>
+                   <h3 class="recipeIngredientsHeading">Ingredients</h3>
+                   <ul class="recipeIngredients">
+                     ${recipe.ingredients.map((ingredient) => (`<li class="recipe-ingredient">${ingredient}</li>`))}
+                    </ul>
+                   <h3 class="recipe-preparation-heading">Preparation</h3>
+                   <p class="recipe-preparation">${recipe.preparation}</p>
+                </div`;
             recipesElement.appendChild(newRecipeElement);
         });
     });
