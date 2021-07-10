@@ -45,20 +45,12 @@ export namespace serverModulprüfung {       // export vor Namecpace, aufgrund T
         server.addListener("listening", () => console.log("Listening"));    // Listener, der auf bestimmte Events (z. B. Klickevent) hört
     }
 
-    async function connectToUserDb(_url: string): Promise<void> {
-        let options: Mongo.MongoClientOptions = { useNewUrlParser: true, useUnifiedTopology: true };
-        let mongoClient: Mongo.MongoClient = new Mongo.MongoClient(_url, options);
+    async function connectToCollections(): Promise<void> {
+        const options: Mongo.MongoClientOptions = {useNewUrlParser: true, useUnifiedTopology: true};
+        const mongoClient: Mongo.MongoClient = new Mongo.MongoClient(databaseURL, options);
         await mongoClient.connect();                                                // await da auf Promise gewartete wird
         userData = mongoClient.db("userData").collection("Users");
         console.log("Database connection:", userData != undefined);                 // Hat userData Definition -> true, sonst false als Indikator
-    }
-
-    async function connectToRecipeDb(_url: string): Promise<void> {
-        let options: Mongo.MongoClientOptions = { useNewUrlParser: true, useUnifiedTopology: true };
-        let mongoClient: Mongo.MongoClient = new Mongo.MongoClient(_url, options);
-        await mongoClient.connect();                                                // await da auf Promise gewartete wird
-        recipeData = mongoClient.db("userData").collection("Recipes");
-        console.log("Database connection:", recipeData != undefined);                 // Hat recipeData Definition -> true, sonst false als Indikator
     }
 
     async function handleRequest(_request: Http.IncomingMessage, _response: Http.ServerResponse): Promise<void> {  // Funktion, die die Serveranfragen durch Nutzer verarbeitet
@@ -103,15 +95,12 @@ export namespace serverModulprüfung {       // export vor Namecpace, aufgrund T
         _response.end();                // markiert Ende der Serverantwort
     }
 
-    async function register(url: URLSearchParams): Promise<string> {
-        const usernameExists: boolean = (await userData.findOne({ uname: url.get("uname") })) !== null;
+    async function register(user: User): Promise<ServerMeldung> {
+        const usernameExists: boolean = (await userCollection.findOne({username: user.username})) !== null;
 
         if (!usernameExists) {
-                userData.insertOne({
-                uname: url.get("uname"),
-                password: url.get("password")
-            });
-                console.log(`Saved user ${url.get("fname")} to database`);    // Servernachricht, dass der Nutzer angelegt wurde.
+            await userCollection.insertOne(user);
+            console.log(`Saved user ${user.username} to database`);    // Servernachricht, dass der Nutzer angelegt wurde.
         }
 
         return JSON.stringify({
@@ -120,36 +109,91 @@ export namespace serverModulprüfung {       // export vor Namecpace, aufgrund T
         });
     }
 
-    async function login(url: URLSearchParams): Promise<string> {
-        const uname: string = url.get("uname");
-        const password: string = url.get("password");
-        const loginSuccess: boolean = (await userData.findOne({ uname: uname, password: password })) !== null;
-        return JSON.stringify({
+    async function login(username: string, password: string): Promise<ServerMeldung> {
+        const loginSuccess: boolean = (await userCollection.findOne({username: username, password: password})) !== null;
+        return {
             error: !loginSuccess,
-            message: loginSuccess ? "Login erfolgreich" :  "Login fehlgeschlagen!"
-        });
+            message: loginSuccess ? "Login erfolgreich" : "Login fehlgeschlagen!"
+        };
     }
 
-    async function createRecipe(url: URLSearchParams): Promise<string> {
-        const recipeExists: boolean = (await recipeData.findOne({ recipeTitle: recipeTitle, username: username})) !== null;
+    async function createRecipe(recipe: Recipe): Promise<ServerMeldung> {       // Rezept wird übergeben und in meiner Rezeptedatenbank wird gecheckt, ob Rezept mit diesme Titel in Kombination mit Username existiert
+        const recipeExists: boolean = (await recipeCollection.findOne({
+            title: recipe.title,
+            username: recipe.username
+        })) !== null;
 
         if (!recipeExists) {
-                recipeData.insertOne({
-                username: url.get("username"),
-                title: url.get("title"),
-                ingredients: url.get("ingredients"),
-                preparation: url.get("preparation")
-            });
-            console.log(`Saved Recipe ${url.get("title")} to database`); // Servernachricht, dass das Rezept angelegt und in Datenbank gespeichert wurde.
+            await recipeCollection.insertOne(recipe);
+            console.log(`Saved Recipe ${recipe.title} to database`); // Servernachricht, dass das Rezept angelegt und in Datenbank gespeichert wurde.
         }
 
-
-        // check if recipe+username exists
+        return {
+            error: recipeExists,
+            message: recipeExists ? "Rezept existiert bereits!" : "Rezept erstellt"
+        };
     }
 
-    async function getRecipes(url: URLSearchParams) Promise<string> {
+    async function getRecipes(): Promise<ServerMeldung> {
+        const recipes: Promise<Recipe[]> = recipeCollection.find({}, {        // Hole mir alle Einträge aus meiner Datenbank, die Username, Titel, Zutaten und Zubereitsungsanweisung enthält (also Rezept ist)
+            projection: {
+                "_id": false,                       //Standarnmäßiger MongoDB-Parameter, der auf false gesetz werden muss, da dieser nicht im Rezept drin ist
+                "username": true,
+                "title": true,
+                "ingredients": true,
+                "preparation": true
+            }
+        }).toArray();                               //Packt alles in ein Array
 
+        return {
+            error: false,
+            message: JSON.stringify(recipes)
+        };
+    }
+
+    async function deleteRecipe(username: string, recipeTitle: string): Promise<ServerMeldung> {
+
+
+        return {
+            error: false,
+            message: ""
+        };
     }
 
 
+    async function addToFavorites(username: string, favorite: Favorite): Promise<ServerMeldung> {
+
+
+        return {
+            error: false,
+            message: ""
+        };
+    }
+
+    async function deleteFromFavorites(username: string, favorite: Favorite): Promise<ServerMeldung> {
+
+
+        return {
+            error: false,
+            message: ""
+        };
+    }
+
+    async function getFavorites(username: string): Promise<ServerMeldung> {
+        const user: User = await userCollection.findOne({username: username});          // get User durch Usernamen
+        const favorites: Favorite[] = user.favorites;                                       // Favorite[] von User bezogen
+        const favoriteRecipes: Recipe[] = [];                                               // Recipe[], damit nicht nur Titel und Username des Erstellers angezeigt werden, sondern auhc Rest der Daten
+
+        for (const favorite of favorites) {                                                 // für jeden favorite aus dem Favorite[] des Users
+            favoriteRecipes.push(await recipeCollection.findOne({                       // wird das favoriteRecipes[] um das entsprechende Rezept (matching title und username) erweitert
+                title: favorite.title,
+                username: favorite.username
+            }));
+        }
+
+        return {
+            error: false,
+            message: JSON.stringify(favoriteRecipes)
+        };
+    }
 }
