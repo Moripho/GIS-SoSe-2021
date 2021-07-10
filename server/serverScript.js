@@ -13,6 +13,7 @@ var serverModulprüfung;
     const isLocal = false; // Bei Upload in Cloud Wert als false setzen!
     const databaseURL = isLocal ? "mongodb://localhost:27017" : "mongodb+srv://MoriphoADMIN:<9u44YeFMCJuX6ysf>@gissose2021.ddtxe.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
     startServer(port);
+    connectToUserDb(databaseURL);
     function startServer(_port) {
         let server = Http.createServer(); // Erstellen eines HTTP-Servers
         console.log("Server starting on port " + _port); // Konsolenausgabe, die Port des Servers ausgibt
@@ -55,6 +56,14 @@ var serverModulprüfung;
                 case "getRecipes":
                     response = await getRecipes();
                     break;
+                case "createRecipe":
+                    response = await createRecipe();
+                    break;
+                case "deleteRecipe":
+                    response = await deleteRecipe();
+                    break;
+                case "addToFavorites":
+                    response = await addToFavorites();
                 default:
                     response = JSON.stringify({
                         error: true,
@@ -85,11 +94,22 @@ var serverModulprüfung;
         const loginSuccess = (await userData.findOne({ uname: uname, password: password })) !== null;
         return JSON.stringify({
             error: !loginSuccess,
-            message: loginSuccess ? "Login successful" : "Login failed"
+            message: loginSuccess ? "Login erfolgreich" : "Login fehlgeschlagen!"
         });
     }
-    function createRecipe() {
+    async function createRecipe(url) {
+        const recipeExists = (await recipeData.findOne({ recipeTitle: recipeTitle, username: username })) !== null;
+        if (!recipeExists) {
+            recipeData.insertOne({
+                username: url.get("username"),
+                title: url.get("title"),
+                ingredients: url.get("ingredients"),
+                preparation: url.get("preparation")
+            });
+            console.log(`Saved Recipe ${url.get("title")} to database`); // Servernachricht, dass das Rezept angelegt und in Datenbank gespeichert wurde.
+        }
         // check if recipe+username exists
     }
+    Promise < string > {};
 })(serverModulprüfung = exports.serverModulprüfung || (exports.serverModulprüfung = {}));
 //# sourceMappingURL=serverScript.js.map

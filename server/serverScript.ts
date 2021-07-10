@@ -31,9 +31,11 @@ export namespace serverModulprüfung {       // export vor Namecpace, aufgrund T
     if (!port) port = 8100;                         // Falls port keinen Wert hat, wird ihm 8100 zugewiesen
 
     const isLocal: boolean = false;                 // Bei Upload in Cloud Wert als false setzen!
+
     const databaseURL: string = isLocal ? "mongodb://localhost:27017" : "mongodb+srv://MoriphoADMIN:<9u44YeFMCJuX6ysf>@gissose2021.ddtxe.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
     startServer(port);
+    connectToUserDb(databaseURL);
 
     function startServer(_port: number): void {             // Funktion, um Server auf einem übergebenen Port zu starten
         let server: Http.Server = Http.createServer();      // Erstellen eines HTTP-Servers
@@ -82,6 +84,14 @@ export namespace serverModulprüfung {       // export vor Namecpace, aufgrund T
                 case "getRecipes":
                     response = await getRecipes();
                     break;
+                case "createRecipe":
+                    response = await createRecipe();
+                    break;
+                case "deleteRecipe":
+                    response = await deleteRecipe();
+                    break;
+                case "addToFavorites":
+                    response = await addToFavorites();
                 default:
                     response = JSON.stringify({
                         error: true,
@@ -97,12 +107,11 @@ export namespace serverModulprüfung {       // export vor Namecpace, aufgrund T
         const usernameExists: boolean = (await userData.findOne({ uname: url.get("uname") })) !== null;
 
         if (!usernameExists) {
-
-            userData.insertOne({
+                userData.insertOne({
                 uname: url.get("uname"),
                 password: url.get("password")
             });
-            console.log(`Saved user ${url.get("fname")} to database`);    // Servernachricht, dass der Nutzer angelegt wurde.
+                console.log(`Saved user ${url.get("fname")} to database`);    // Servernachricht, dass der Nutzer angelegt wurde.
         }
 
         return JSON.stringify({
@@ -117,11 +126,30 @@ export namespace serverModulprüfung {       // export vor Namecpace, aufgrund T
         const loginSuccess: boolean = (await userData.findOne({ uname: uname, password: password })) !== null;
         return JSON.stringify({
             error: !loginSuccess,
-            message: loginSuccess ? "Login successful" :  "Login failed"
+            message: loginSuccess ? "Login erfolgreich" :  "Login fehlgeschlagen!"
         });
     }
 
-    function createRecipe() {
+    async function createRecipe(url: URLSearchParams): Promise<string> {
+        const recipeExists: boolean = (await recipeData.findOne({ recipeTitle: recipeTitle, username: username})) !== null;
+
+        if (!recipeExists) {
+                recipeData.insertOne({
+                username: url.get("username"),
+                title: url.get("title"),
+                ingredients: url.get("ingredients"),
+                preparation: url.get("preparation")
+            });
+            console.log(`Saved Recipe ${url.get("title")} to database`); // Servernachricht, dass das Rezept angelegt und in Datenbank gespeichert wurde.
+        }
+
+
         // check if recipe+username exists
     }
+
+    async function getRecipes(url: URLSearchParams) Promise<string> {
+
+    }
+
+
 }
