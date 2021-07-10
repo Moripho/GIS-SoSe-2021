@@ -8,7 +8,12 @@ export namespace serverModulprüfung {       // export vor Namecpace, aufgrund T
     interface User {            // Interface für User mit Nutzernamen, Passwort und Favoritenliste
         username: string;
         password: string;
-        favorites: string[];
+        favorites: Favorite[];
+    }
+
+    interface Favorite {
+        username: string;
+        title: string;
     }
 
     interface Recipe {          // Interface für Rezepte mit Ersteller des Rezepts, Titel, Zutaten und Zubereitungsanweisung
@@ -19,23 +24,19 @@ export namespace serverModulprüfung {       // export vor Namecpace, aufgrund T
     }
 
     interface ServerMeldung {   // Interface für Server Meldung
-        error: string;          // Error Message, wenn Username vorhanden
+        error: boolean;         // Error Message, wenn Username vorhanden
         message: string;        // Nachricht, wenn User erfolgreich angelegt wurde
     }
 
-    let userData: Mongo.Collection;         // MongoDB-Datenbank mit allen Nutzerdaten
-    let recipeData: Mongo.Collection;       // MongoDB-Datenbank mit allen Rezeptdaten
-
-
+    const databaseURL: string = "mongodb+srv://MoriphoADMIN:<9u44YeFMCJuX6ysf>@gissose2021.ddtxe.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
     let port: number = Number(process.env.PORT);    // Erstellen der Port-Adresse, Process-Objekt liefert Port. Kann aber auch string oder undefined sein, daher auf number casten
     if (!port) port = 8100;                         // Falls port keinen Wert hat, wird ihm 8100 zugewiesen
 
-    const isLocal: boolean = false;                 // Bei Upload in Cloud Wert als false setzen!
-
-    const databaseURL: string = isLocal ? "mongodb://localhost:27017" : "mongodb+srv://MoriphoADMIN:<9u44YeFMCJuX6ysf>@gissose2021.ddtxe.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+    let userCollection: Mongo.Collection;         // MongoDB-Collection mit allen Nutzerdaten
+    let recipeCollection: Mongo.Collection;       // MongoDB-Collection mit allen Rezeptdaten
 
     startServer(port);
-    connectToUserDb(databaseURL);
+    connectToCollections();
 
     function startServer(_port: number): void {             // Funktion, um Server auf einem übergebenen Port zu starten
         let server: Http.Server = Http.createServer();      // Erstellen eines HTTP-Servers
@@ -49,8 +50,12 @@ export namespace serverModulprüfung {       // export vor Namecpace, aufgrund T
         const options: Mongo.MongoClientOptions = {useNewUrlParser: true, useUnifiedTopology: true};
         const mongoClient: Mongo.MongoClient = new Mongo.MongoClient(databaseURL, options);
         await mongoClient.connect();                                                // await da auf Promise gewartete wird
-        userData = mongoClient.db("userData").collection("Users");
-        console.log("Database connection:", userData != undefined);                 // Hat userData Definition -> true, sonst false als Indikator
+
+        userCollection = mongoClient.db("userData").collection("Users");
+        console.log("Database connection:", userCollection != undefined);                 // Hat userCollection Definition -> true, sonst false als Indikator
+
+        recipeCollection = mongoClient.db("userData").collection("Recipes");
+        console.log("Database connection:", recipeCollection != undefined);                 // Hat recipeCollection Definition -> true, sonst false als Indikator
     }
 
     async function handleRequest(_request: Http.IncomingMessage, _response: Http.ServerResponse): Promise<void> {  // Funktion, die die Serveranfragen durch Nutzer verarbeitet
@@ -65,32 +70,54 @@ export namespace serverModulprüfung {       // export vor Namecpace, aufgrund T
         if (_request.url) {                                                                 // if-Bedingung für den Fall einer eingehenden Request
             console.log("Received parameters");                                             // Bestätigung, dass Request stattgefunden hast
             const url: URLSearchParams = new URLSearchParams(_request.url.replace("/?", "")); // URL in Zeichenkette umwandeln, um daraus Requesttyp zu bekommen
-            let response: string;
+            let response: ServerMeldung;
             switch (url.get("requestType")) {
                 case "register":
-                    response = await register(url);
+                    response = await register({
+                        username: url.get("username"),
+                        password: url.get("password"),
+                        favorites: []
+                    });
                     break;
                 case "login":
-                    response = await login(url);
+                    response = await login(url.get("username"), url.get("password"));
                     break;
                 case "getRecipes":
                     response = await getRecipes();
                     break;
                 case "createRecipe":
-                    response = await createRecipe();
+                    response = await createRecipe({
+                        username: url.get("username"),
+                        title: url.get("title"),
+                        ingredients: JSON.parse(url.get("ingredients")),
+                        preparation: url.get("preparation")
+                    });
                     break;
                 case "deleteRecipe":
-                    response = await deleteRecipe();
+                    response = await deleteRecipe(url.get("username"), url.get("title"));
                     break;
                 case "addToFavorites":
-                    response = await addToFavorites();
+                    response = await addToFavorites(url.get("username"), {
+                        title: url.get("favoriteTitle"),
+                        username: url.get("favoriteUsername")
+                    });
+                    break;
+                case "deleteFromFavorites":
+                    response = await deleteFromFavorites(url.get("username"), {
+                        title: url.get("favoriteTitle"),
+                        username: url.get("favoriteUsername")
+                    });
+                    break;
+                case "getFavorites":
+                    response = await getFavorites(url.get("username"));
+                    break;
                 default:
-                    response = JSON.stringify({
+                    response = {
                         error: true,
                         message: "Error: Unknown request type"
-                    });
+                    };
             }
-            _response.write(response);
+            _response.write(JSON.stringify(response));          //Servermeldung wird in String konvertiert, um anschließend an Nutzer zurückgegeben werden zu können
         }
         _response.end();                // markiert Ende der Serverantwort
     }
@@ -103,10 +130,10 @@ export namespace serverModulprüfung {       // export vor Namecpace, aufgrund T
             console.log(`Saved user ${user.username} to database`);    // Servernachricht, dass der Nutzer angelegt wurde.
         }
 
-        return JSON.stringify({
+        return {
             error: usernameExists,
             message: usernameExists ? "User existiert bereits!" : "Konto erstellt"
-        });
+        };
     }
 
     async function login(username: string, password: string): Promise<ServerMeldung> {

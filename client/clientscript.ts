@@ -104,13 +104,27 @@ function getInputValueById(elementId: string): string {
     return inputElement.value;
 }
 
-// tslint:disable-next-line:no-any
-async function talkToServer(data: FormData): Promise<any> {
+async function talkToServer(data: FormData): Promise<ServerMeldung> {
     // tslint:disable-next-line:no-any
     const query: URLSearchParams = new URLSearchParams(<any>data);      // Umwandlung in URL-Parameter (url.com?key=value&key2=value2)
     return fetch(url + "?" + query.toString(), {                // Die in Zeile 2 deklarierte URL wird um die Request ergänzt, indem das obige Objekt um die Queries ergänzt wird (in Stringform)
         method: "GET"
     }).then(response => response.json()).catch(console.error);          // Jeder auftretende Fehler wird in die Konsole weitergeleitet
+}
+
+function renderRecipe(container: HTMLDivElement, recipe: Recipe) {
+    const newRecipeElement: HTMLElement = document.createElement("div");
+    newRecipeElement.className = "recipe";
+    newRecipeElement.innerHTML =
+      `<h2 class="recipeTitle">${recipe.title} - <span class="recipeUsername">${recipe.username}</span></h2>
+       <h3 class="recipeIngredientsHeading">Ingredients</h3>
+       <ul class="recipeIngredients">
+         ${recipe.ingredients.map((ingredient: string) => (`<li class="recipe-ingredient">${ingredient}</li>`))}
+        </ul>
+       <h3 class="recipe-preparation-heading">Preparation</h3>
+       <p class="recipe-preparation">${recipe.preparation}</p>
+       <button class="addToFavorites">♥</button>`;
+    container.appendChild(newRecipeElement);
 }
 
 
