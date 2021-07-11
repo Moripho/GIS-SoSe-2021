@@ -96,7 +96,6 @@ export namespace serverModulprüfung {       // export vor Namecpace, aufgrund T
                 case "deleteRecipe":
                     response = await deleteRecipe(url.get("username"), url.get("title"));
                     break;
-                    /*
                 case "addToFavorites":
                     response = await addToFavorites(url.get("username"), {
                         title: url.get("favoriteTitle"),
@@ -108,7 +107,7 @@ export namespace serverModulprüfung {       // export vor Namecpace, aufgrund T
                         title: url.get("favoriteTitle"),
                         username: url.get("favoriteUsername")
                     });
-                    break;*/
+                    break;
                 case "getFavorites":
                     response = await getFavorites(url.get("username"));
                     break;

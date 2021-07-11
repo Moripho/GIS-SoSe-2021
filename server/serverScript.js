@@ -65,19 +65,18 @@ var serverModulprüfung;
                 case "deleteRecipe":
                     response = await deleteRecipe(url.get("username"), url.get("title"));
                     break;
-                /*
-            case "addToFavorites":
-                response = await addToFavorites(url.get("username"), {
-                    title: url.get("favoriteTitle"),
-                    username: url.get("favoriteUsername")
-                });
-                break;
-            case "deleteFromFavorites":
-                response = await deleteFromFavorites(url.get("username"), {
-                    title: url.get("favoriteTitle"),
-                    username: url.get("favoriteUsername")
-                });
-                break;*/
+                case "addToFavorites":
+                    response = await addToFavorites(url.get("username"), {
+                        title: url.get("favoriteTitle"),
+                        username: url.get("favoriteUsername")
+                    });
+                    break;
+                case "deleteFromFavorites":
+                    response = await deleteFromFavorites(url.get("username"), {
+                        title: url.get("favoriteTitle"),
+                        username: url.get("favoriteUsername")
+                    });
+                    break;
                 case "getFavorites":
                     response = await getFavorites(url.get("username"));
                     break;
