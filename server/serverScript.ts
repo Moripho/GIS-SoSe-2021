@@ -71,7 +71,7 @@ export namespace serverModulprüfung {       // export vor Namecpace, aufgrund T
             console.log("Received parameters");                                             // Bestätigung, dass Request stattgefunden hast
             const url: URLSearchParams = new URLSearchParams(_request.url.replace("/?", "")); // URL in Zeichenkette umwandeln, um daraus Requesttyp zu bekommen
             let response: ServerMeldung;
-            switch (url.get("requestType")) {
+            switch (url.get("requestType")) {                                               // switch case, damit Server identifizieren kann, um welche Art von Request es sich handelt (also um welchen Fall) und was er aufgrund dessen tun soll
                 case "register":
                     response = await register({
                         username: url.get("username"),
