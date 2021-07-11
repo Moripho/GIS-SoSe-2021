@@ -11,7 +11,7 @@ export namespace serverModulprüfung {       // export vor Namecpace, aufgrund T
         favorites: Favorite[];
     }
 
-    interface Favorite {
+    interface Favorite {            // Interface für Favoriten
         username: string;
         title: string;
     }
@@ -96,6 +96,7 @@ export namespace serverModulprüfung {       // export vor Namecpace, aufgrund T
                 case "deleteRecipe":
                     response = await deleteRecipe(url.get("username"), url.get("title"));
                     break;
+                    /*
                 case "addToFavorites":
                     response = await addToFavorites(url.get("username"), {
                         title: url.get("favoriteTitle"),
@@ -107,7 +108,7 @@ export namespace serverModulprüfung {       // export vor Namecpace, aufgrund T
                         title: url.get("favoriteTitle"),
                         username: url.get("favoriteUsername")
                     });
-                    break;
+                    break;*/
                 case "getFavorites":
                     response = await getFavorites(url.get("username"));
                     break;
@@ -127,7 +128,7 @@ export namespace serverModulprüfung {       // export vor Namecpace, aufgrund T
 
         if (!usernameExists) {
             await userCollection.insertOne(user);
-            console.log(`Saved user ${user.username} to database`);    // Servernachricht, dass der Nutzer angelegt wurde.
+            console.log(`Saved user ${user.username} to database`);    // Konsolennachricht, dass der Nutzer angelegt wurde.
         }
 
         return {
@@ -179,16 +180,17 @@ export namespace serverModulprüfung {       // export vor Namecpace, aufgrund T
     }
 
     async function deleteRecipe(username: string, recipeTitle: string): Promise<ServerMeldung> {
+        await recipeCollection.findOneAndDelete({username: username, recipteTitle: recipeTitle})
 
-
+    ;
         return {
             error: false,
-            message: ""
+            message: "Rezept wurde gelöscht!"
         };
     }
 
 
-    async function addToFavorites(username: string, favorite: Favorite): Promise<ServerMeldung> {
+    /* async function addToFavorites(username: string, favorite: Favorite): Promise<ServerMeldung> {
 
 
         return {
@@ -204,7 +206,7 @@ export namespace serverModulprüfung {       // export vor Namecpace, aufgrund T
             error: false,
             message: ""
         };
-    }
+    } */
 
     async function getFavorites(username: string): Promise<ServerMeldung> {
         const user: User = await userCollection.findOne({username: username});          // get User durch Usernamen

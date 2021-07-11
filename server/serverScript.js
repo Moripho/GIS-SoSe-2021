@@ -65,18 +65,19 @@ var serverModulprüfung;
                 case "deleteRecipe":
                     response = await deleteRecipe(url.get("username"), url.get("title"));
                     break;
-                case "addToFavorites":
-                    response = await addToFavorites(url.get("username"), {
-                        title: url.get("favoriteTitle"),
-                        username: url.get("favoriteUsername")
-                    });
-                    break;
-                case "deleteFromFavorites":
-                    response = await deleteFromFavorites(url.get("username"), {
-                        title: url.get("favoriteTitle"),
-                        username: url.get("favoriteUsername")
-                    });
-                    break;
+                /*
+            case "addToFavorites":
+                response = await addToFavorites(url.get("username"), {
+                    title: url.get("favoriteTitle"),
+                    username: url.get("favoriteUsername")
+                });
+                break;
+            case "deleteFromFavorites":
+                response = await deleteFromFavorites(url.get("username"), {
+                    title: url.get("favoriteTitle"),
+                    username: url.get("favoriteUsername")
+                });
+                break;*/
                 case "getFavorites":
                     response = await getFavorites(url.get("username"));
                     break;
@@ -94,7 +95,7 @@ var serverModulprüfung;
         const usernameExists = (await userCollection.findOne({ username: user.username })) !== null;
         if (!usernameExists) {
             await userCollection.insertOne(user);
-            console.log(`Saved user ${user.username} to database`); // Servernachricht, dass der Nutzer angelegt wurde.
+            console.log(`Saved user ${user.username} to database`); // Konsolennachricht, dass der Nutzer angelegt wurde.
         }
         return {
             error: usernameExists,
@@ -138,23 +139,29 @@ var serverModulprüfung;
         };
     }
     async function deleteRecipe(username, recipeTitle) {
+        await recipeCollection.findOneAndDelete({ username: username, recipteTitle: recipeTitle });
+        return {
+            error: false,
+            message: "Rezept wurde gelöscht!"
+        };
+    }
+    /* async function addToFavorites(username: string, favorite: Favorite): Promise<ServerMeldung> {
+
+
         return {
             error: false,
             message: ""
         };
     }
-    async function addToFavorites(username, favorite) {
+
+    async function deleteFromFavorites(username: string, favorite: Favorite): Promise<ServerMeldung> {
+
+
         return {
             error: false,
             message: ""
         };
-    }
-    async function deleteFromFavorites(username, favorite) {
-        return {
-            error: false,
-            message: ""
-        };
-    }
+    } */
     async function getFavorites(username) {
         const user = await userCollection.findOne({ username: username }); // get User durch Usernamen
         const favorites = user.favorites; // Favorite[] von User bezogen
