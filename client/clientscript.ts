@@ -1,7 +1,7 @@
-const isLocal: boolean = true;     // Bei Upload in Cloud muss Wert als false gesetzt werden!
+const isLocal: boolean = false;     // Bei Upload in Cloud muss Wert als false gesetzt werden!
 const url: string = isLocal ? "http://localhost:8100" : "https://gissomses2021.herokuapp.com"; // URL des zu kontaktierenden Servers definieren
 
-interface Recipe {
+interface Recipe {                  // Interface für Rezepte mit Namen des Erstellers, Rezepttitel, Zutaten (als String-Array) u. Zubereitungsanweisungen
     username: string;
     title: string;
     ingredients: string[];
@@ -13,7 +13,7 @@ interface ServerMeldung {   // Interface für Server Meldung
     message: string;        // Nachricht, wenn User erfolgreich angelegt wurde
 }
 
-function authenticateUser(operation: string): void {                            // Funktion, die sowohl Nutzer registrieren, als auch Nutzer eiinloggen kann
+function authenticateUser(operation: string): void {         // Funktion, die sowohl Nutzer registrieren, als auch Nutzer eiinloggen kann
     // Username, password und message-Element aus dem HTML Dokument bekommen
     const username: string = getInputValueById("username");
     const password: string = getInputValueById("password");
@@ -37,13 +37,13 @@ function authenticateUser(operation: string): void {                            
 
 function createRecipe(): void {
     // Username, recipeTitle, ingredientList und preparation aus dem HTML Dokument bekommen
-    const username: string = sessionStorage.getItem("username");
+    const username: string = sessionStorage.getItem("username");                //Der Username kann aus dem Session Storage entnommen werden
     const title: string = getInputValueById("title");
     const ingredients: string = getInputValueById("ingredients");
     const preparation: string = getInputValueById("preparation");
 
-    let data: FormData = new FormData();            // FormData-Objekt anlegen, in welchem die Eingabeparameter des Nutzers gespeichert werden
-    data.append("requestType", "createRecipe");     // Requesttyp definieren
+    let data: FormData = new FormData();            // FormData-Objekt anlegen, in welchem die Eingabeparameter des Nutzers gespeichert werden, die für die Ausführung der Funktion auf Serverseite notwendig sind
+    data.append("requestType", "createRecipe");     // Requesttyp definieren und für Rezept notwendigen Inhalte mitgeben
     data.append("username", username);
     data.append("title", title);
     data.append("ingredients", ingredients);
@@ -57,7 +57,7 @@ function deleteRecipe(): void {
     const username: string = sessionStorage.getItem("username");
     const title: string = getInputValueById("title");
 
-    let data: FormData = new FormData();            // FormData-Objekt anlegen, in welchem die Eingabeparameter des Nutzers gespeichert werden
+    let data: FormData = new FormData();
     data.append("requestType", "deleteRecipe");
     data.append("username", username);
     data.append("title", title);
@@ -92,14 +92,14 @@ function addToFavorites(): void {
     talkToServer(data);
 }
 
-// Funktion die die Eingabe des Users in einem HTML-Input-Element zurückgibt
+// Funktion die die Eingabe des Users in einem HTML-Input-Element zurückgibt, um Codewiederholung zu vermeiden
 function getInputValueById(elementId: string): string {
     const inputElement: HTMLInputElement = <HTMLInputElement>document.getElementById(elementId);
     return inputElement.value;
 }
 
-async function talkToServer(data: FormData): Promise<ServerMeldung> {
-    // tslint:disable-next-line:no-any
+async function talkToServer(data: FormData): Promise<ServerMeldung> {       // Funktion mithilfe derer mit dem Server kommuniziert wird
+
     const query: URLSearchParams = new URLSearchParams(<any>data);      // Umwandlung in URL-Parameter (url.com?key=value&key2=value2)
     return fetch(url + "?" + query.toString(), {
         method: "GET"
@@ -112,6 +112,7 @@ async function talkToServer(data: FormData): Promise<ServerMeldung> {
 }
 
 function renderRecipe(container: HTMLDivElement, recipe: Recipe): void {
+    // Funktion, die dynamisch ein Rezept erstellt, indem ein div-Container erstellt wird, welcher mit den einzelnen Bestandteilen des Rezepts befüllt wird
     const newRecipeElement: HTMLElement = document.createElement("div");
     newRecipeElement.className = "recipe";
     newRecipeElement.innerHTML =
@@ -120,9 +121,9 @@ function renderRecipe(container: HTMLDivElement, recipe: Recipe): void {
        <ul class="recipeIngredients">
          ${recipe.ingredients.map((ingredient: string) => (`<li class="recipe-ingredient">${ingredient}</li>`))}
         </ul>
-       <h3 class="recipe-preparation-heading">Preparation</h3>
-       <p class="recipe-preparation">${recipe.preparation}</p>
-       <button class="addToFavorites">♥</button>`;
+       <h3 class="recipePreparationHeading">Preparation</h3>
+       <p class="recipePreparation">${recipe.preparation}</p>
+       <button class="addToFavorites" onclick="addToFavorites()">♥</button>`;
     container.appendChild(newRecipeElement);
 }
 
