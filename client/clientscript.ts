@@ -1,4 +1,4 @@
-const isLocal: boolean = false;     // Bei Upload in Cloud muss Wert als false gesetzt werden!
+const isLocal: boolean = true;     // Bei Upload in Cloud muss Wert als false gesetzt werden!
 const url: string = isLocal ? "http://localhost:8100" : "https://gissomses2021.herokuapp.com"; // URL des zu kontaktierenden Servers definieren
 
 interface Recipe {
@@ -101,16 +101,21 @@ function getInputValueById(elementId: string): string {
 async function talkToServer(data: FormData): Promise<ServerMeldung> {
     // tslint:disable-next-line:no-any
     const query: URLSearchParams = new URLSearchParams(<any>data);      // Umwandlung in URL-Parameter (url.com?key=value&key2=value2)
-    return fetch(url + "?" + query.toString(), {                // Die in Zeile 2 deklarierte URL wird um die Request ergänzt, indem das obige Objekt um die Queries ergänzt wird (in Stringform)
+    return fetch(url + "?" + query.toString(), {
         method: "GET"
-    }).then(response => response.json()).catch(console.error);          // Jeder auftretende Fehler wird in die Konsole weitergeleitet
+    }).then(response => {
+        if (!response.ok) {
+            throw new Error(response.statusText);
+        }
+        return response.json();
+    });
 }
 
 function renderRecipe(container: HTMLDivElement, recipe: Recipe): void {
     const newRecipeElement: HTMLElement = document.createElement("div");
     newRecipeElement.className = "recipe";
     newRecipeElement.innerHTML =
-      `<h2 class="recipeTitle">${recipe.title} - <span class="recipeUsername">${recipe.username}</span></h2>
+        `<h2 class="recipeTitle">${recipe.title} - <span class="recipeUsername">${recipe.username}</span></h2>
        <h3 class="recipeIngredientsHeading">Ingredients</h3>
        <ul class="recipeIngredients">
          ${recipe.ingredients.map((ingredient: string) => (`<li class="recipe-ingredient">${ingredient}</li>`))}

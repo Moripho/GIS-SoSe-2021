@@ -12,7 +12,7 @@
   },
   "scripts": {
     "start": "node server/serverscript.js",
-    "serve": "live-server --port=3000 --open=\"./client\""
+    "serve": "live-server --port=3000 --open=\"./client\" --cors"
   },
   "repository": {
     "type": "git",

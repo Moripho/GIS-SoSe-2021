@@ -1,5 +1,5 @@
 "use strict";
-const isLocal = false; // Bei Upload in Cloud muss Wert als false gesetzt werden!
+const isLocal = true; // Bei Upload in Cloud muss Wert als false gesetzt werden!
 const url = isLocal ? "http://localhost:8100" : "https://gissomses2021.herokuapp.com"; // URL des zu kontaktierenden Servers definieren
 function authenticateUser(operation) {
     // Username, password und message-Element aus dem HTML Dokument bekommen
@@ -74,7 +74,12 @@ async function talkToServer(data) {
     const query = new URLSearchParams(data); // Umwandlung in URL-Parameter (url.com?key=value&key2=value2)
     return fetch(url + "?" + query.toString(), {
         method: "GET"
-    }).then(response => response.json()).catch(console.error); // Jeder auftretende Fehler wird in die Konsole weitergeleitet
+    }).then(response => {
+        if (!response.ok) {
+            throw new Error(response.statusText);
+        }
+        return response.json();
+    });
 }
 function renderRecipe(container, recipe) {
     const newRecipeElement = document.createElement("div");
