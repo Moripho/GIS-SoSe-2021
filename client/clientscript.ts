@@ -1,4 +1,4 @@
-const isLocal: boolean = true;     // Bei Upload in Cloud muss Wert als false gesetzt werden!
+const isLocal: boolean = false;     // Bei Upload in Cloud muss Wert als false gesetzt werden!
 const url: string = isLocal ? "http://localhost:8100" : "https://gissomses2021.herokuapp.com"; // URL des zu kontaktierenden Servers definieren
 
 interface Recipe {
@@ -13,13 +13,7 @@ interface ServerMeldung {   // Interface für Server Meldung
     message: string;        // Nachricht, wenn User erfolgreich angelegt wurde
 }
 
-function checkLogin(): void {                           // Wenn username nicht in SessionStorage, wird Nutzer wieder zur Login-Seite weitergeleitet und muss sich neu einloggen
-    if (!sessionStorage.getItem("username")) {
-        window.location.href = "index.html";
-    }
-}
-
-function authenticateUser(operation: string): void {
+function authenticateUser(operation: string): void {                            // Funktion, die sowohl Nutzer registrieren, als auch Nutzer eiinloggen kann
     // Username, password und message-Element aus dem HTML Dokument bekommen
     const username: string = getInputValueById("username");
     const password: string = getInputValueById("password");
@@ -112,7 +106,7 @@ async function talkToServer(data: FormData): Promise<ServerMeldung> {
     }).then(response => response.json()).catch(console.error);          // Jeder auftretende Fehler wird in die Konsole weitergeleitet
 }
 
-function renderRecipe(container: HTMLDivElement, recipe: Recipe) {
+function renderRecipe(container: HTMLDivElement, recipe: Recipe): void {
     const newRecipeElement: HTMLElement = document.createElement("div");
     newRecipeElement.className = "recipe";
     newRecipeElement.innerHTML =

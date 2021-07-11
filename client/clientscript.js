@@ -1,11 +1,6 @@
 "use strict";
-const isLocal = true; // Bei Upload in Cloud muss Wert als false gesetzt werden!
+const isLocal = false; // Bei Upload in Cloud muss Wert als false gesetzt werden!
 const url = isLocal ? "http://localhost:8100" : "https://gissomses2021.herokuapp.com"; // URL des zu kontaktierenden Servers definieren
-function checkLogin() {
-    if (!sessionStorage.getItem("username")) {
-        window.location.href = "index.html";
-    }
-}
 function authenticateUser(operation) {
     // Username, password und message-Element aus dem HTML Dokument bekommen
     const username = getInputValueById("username");
