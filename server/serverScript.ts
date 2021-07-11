@@ -145,7 +145,7 @@ export namespace serverModulprüfung {       // export vor Namecpace, aufgrund T
         };
     }
 
-    async function createRecipe(recipe: Recipe): Promise<ServerMeldung> {       // Rezept wird übergeben und in meiner Rezeptedatenbank wird gecheckt, ob Rezept mit diesme Titel in Kombination mit Username existiert
+    async function createRecipe(recipe: Recipe): Promise<ServerMeldung> {       // Rezept wird übergeben und in der Rezeptedatenbank wird gecheckt, ob Rezept mit diesem Titel in Kombination mit Username existiert
         const recipeExists: boolean = (await recipeCollection.findOne({
             title: recipe.title,
             username: recipe.username
@@ -214,7 +214,7 @@ export namespace serverModulprüfung {       // export vor Namecpace, aufgrund T
         const favoriteRecipes: Recipe[] = [];                                               // Recipe[], damit nicht nur Titel und Username des Erstellers angezeigt werden, sondern auhc Rest der Daten
 
         for (const favorite of favorites) {                                                 // für jeden favorite aus dem Favorite[] des Users
-            favoriteRecipes.push(await recipeCollection.findOne({                       // wird das favoriteRecipes[] um das entsprechende Rezept (matching title und username) erweitert
+            favoriteRecipes.push(await recipeCollection.findOne({                       // wird das favoriteRecipes Recipe[] um das entsprechende Rezept (matching title und username) erweitert
                 title: favorite.title,
                 username: favorite.username
             }));

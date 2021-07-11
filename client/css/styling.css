@@ -211,7 +211,11 @@ textarea {
 /*--Meine-Favoriten-Seite--------------------------------------------*/
 
 .favoritesContainer {
-
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    position: fixed;
+    top: 100%;
+    left: 100%;
 }
 
 /*--Media-Queries für responsives Design--------------------------------------------*/
